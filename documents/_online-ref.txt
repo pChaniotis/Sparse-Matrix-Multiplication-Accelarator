@@ -1,0 +1,13 @@
+https://www.cs.cmu.edu/~scandal/cacm/node9.html 								Sparse Matrix Multiplication
+
+https://www.geeksforgeeks.org/operations-sparse-matrices/ 						Operations on Sparse Matrices
+
+https://en.wikipedia.org/wiki/Sparse_matrix										Sparse Matrix - Wikipedia
+
+https://developpaper.com/instructions-for-using-python-scipy-sparse-matrix/		Python scipy sprase matrix/
+
+https://www.cplusplus.com/reference/vector/vector/								std::vector refference
+
+
+
+
