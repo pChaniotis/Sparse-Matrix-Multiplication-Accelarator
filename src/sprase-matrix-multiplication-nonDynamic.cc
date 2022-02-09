@@ -7,30 +7,23 @@ typedef int int_ac;
 #define VALUE 2
 
 
+template<int r, int c>
 class sparse{
 	
 	public:
-	int_ac r;
-	int_ac c;
 	int_ac NNZ;
-	int_ac data[10000][3];
+	int_ac data[r*c][3];
 	
-	public://-------methods---------
-	
-	
-	
-	sparse(const int_ac [100][100] matrix ,int_ac& r, int_ac& c){
+	public:																			//-------methods---------
+	sparse(const int_ac matrix [r][c]){
  	
 		NNZ = 0;
-	 	this->r = r;
-		this->c = c;
 		
 		for (int i = 0; i < r; i++){
 	        for (int j = 0; j < c; j++){
 	            if (matrix[i][j] > 0){
-
-										//					  Insert to CSR
-					data[NNZ][ROW] = i;
+					//																 Insert to CSR
+					data[NNZ][ROW] = i;	
 					data[NNZ][COLUMN] = j;
 					data[NNZ][VALUE] = matrix[i][j];
 					
@@ -40,104 +33,52 @@ class sparse{
 		}						
 	}
 	
-
-    
-       
-    
-    sparse operator*(const sparse& b){
-		
-		
-		if(this->c != b.r){
-		
-			std::cout<<"\nIllegal matrix boundaries\n";
-		}
-		
-		//																   Initalize an a.row x b.column matrix
-	
-		int_ac C[100][100];
-
-	
-		
-		
-		
-		for(int i = 0;i < this->NNZ;i++){//									For every column in a
-			
-			for(int j = 0;j < b.NNZ;j++){//									For every row in b
-				
-				if( this->data[i][COLUMN] == b.data[j][ROW] ){//				If b.row = a.column
-					
-					C[this->data[i][ROW]][b.data[j][COLUMN]] += this->data[i][VALUE] * b.data[j][VALUE];
-				}
-				
-			}		
-			
-		}
-		
-		int_ac ra = this->r;
-		int_ac cb = b.c;
-		
-		return sparse(C,ra,cb);
-	}
 	
 	void printData(){
 	    std::cout << "\nDimension of Sparse Matrix: " << NNZ << " x " << 3;
 	    std::cout << "\nSparse Matrix: \nRow  Column  Value\n";
-	 
 	    
 		for (int i = 0; i < NNZ; i++) {
 	
 	    	std::cout << data[i][ROW] << " 	" << data[i][COLUMN] << "	" << data[i][VALUE] << "\n";
 		}
 	}
-	
-	
-	
 };
 
 
-//matrix mul(matrix& a, int_ac ra, int_ac ca, matrix& b, int_ac rb , int_ac cb){
-//	
-//	
-//	if(ca != rb){
-//		
-//		std::cout<<"\nIllegal matrix boundaries\n";
-//		return {{0,0},{0,0}};
-//	}
-//	
-//	vect vec;
-//	vec.assign(cb,0);
-//		
-//	matrix C;
-//	C.assign (ra,vec);
-//	
-//	std::cout<<"\nMatrix "<<ra<<"x"<<cb<<":"<<std::endl;
-//	
-//	for (int i = 0; i < ra; i++) {
-//        for (int j = 0; j < cb; j++) {
-//
-//            for (int k = 0; k < rb; k++) {
-//            	
-//                C[i][j] += a[i][k] * b[k][j];
-//            }
-//
-//            std::cout << C[i][j] << "\t";
-//        }
-//
-//        std::cout << std::endl;
-//    }
-//	
-//	return C;
-//
-//	
-//}
+template<int rowA,int colA,int rowB,int colB>
+sparse<rowA,colB> multiply(const sparse<rowA,colB>& a, const sparse<rowB,colB>& b){
+
+	int_ac C[rowA][colB];
+	for(int i = 0;i<rowA;i++){
+		for (int j=0; j<colB; j++){
+			C[i][j] = 0;
+		}
+	}
+
+	for(int i = 0;i < a.NNZ;i++){//										For every column in a
+		
+		for(int j = 0;j < b.NNZ;j++){//									For every row in b
+			
+			if( a.data[i][COLUMN] == b.data[j][ROW] ){//				If b.row = a.column
+				
+				C[a.data[i][ROW]][b.data[j][COLUMN]] += a.data[i][VALUE] * b.data[j][VALUE];
+			}
+			
+		}		
+		
+	}
+	
+	sparse<rowA,colB> obj(C);
+	
+	return obj;
+}
+
 
 
 
 int main(){
-	
-	
 
-	
 	int_ac a[4][3] =
 	    {
 	        {1, 0, 0},
@@ -156,33 +97,23 @@ int main(){
 
 	    };
 	
-	
-	
+	const int_ac ra = 4;
+	const int_ac ca = 3;
+	const int_ac rb = 3;
+	const int_ac cb = 3;
 	    
-	    
-	
-	
-	sparse obj_a(a,4,3);
+
+	sparse<ra,ca> obj_a(a);
 	obj_a.printData();
-			
-	sparse obj_b(b,3,3);
+	
+	sparse<rb,cb> obj_b(b);
 	obj_b.printData();
 	
 	
-	
-	mul(a,b);
-	
-	sparse obj_c = obj_a*obj_b;
+	sparse<ra,cb> obj_c = multiply<ra,ca,rb,cb>(obj_a,obj_b);
 	obj_c.printData();
 	
 
-	
-	
-	
-	
-	
-
-	
 }
 
 
