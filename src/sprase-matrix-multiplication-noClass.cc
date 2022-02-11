@@ -12,7 +12,7 @@ template<int r, int c>																	//-------methods---------
 void sparse(const int_ac matrix [r][c],int_ac &NNZ, int_ac data[r*c][3]){
 
 
-
+	NNZ = 0;
 	
 	for (int i = 0; i < r; i++){
         for (int j = 0; j < c; j++){
@@ -65,6 +65,15 @@ void multiply(const int_ac a_data[colA*rowA][3], int a_NNZ, const int_ac b_data[
 
 }
 
+template<int r, int c>
+void printMatrix(int_ac C[r][c]){
+	for(int i = 0;i<r;i++){
+		for (int j=0; j<c; j++){
+			std::cout<<C[i][j]<<"\t";
+		}
+		std::cout<<"\n";
+	}
+}
 
 
 
@@ -105,13 +114,9 @@ int main(){
 	
 	multiply<ra,ca,rb,cb>(a_data, a_NNZ,b_data,b_NNZ,C);	
 	
-	for(int i = 0;i<ra;i++){
-		for (int j=0; j<cb; j++){
-			std::cout<<C[i][j]<<"\t";
-		}
-		std::cout<<"\n";
-	}
-	    
+	
+	printMatrix<ra,cb>(C);
+	std::cin.get();
 
 	
 
