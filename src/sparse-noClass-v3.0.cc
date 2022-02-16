@@ -74,12 +74,8 @@ void printMatrix(int_ac C[r][c]){
 }
 
 
-
-
-
-
-template<int rowA,int colA, int rowB,int colB>
-void CCS_BLOCK(multiply)(const int_ac a_data[colA*rowA][3], int_ac a_NNZ, const int_ac b_data[colB*rowB][3], int_ac b_NNZ, int_ac C[rowA][colB]){		
+template<int rowA,int colA, int rowB,int colB> 
+void CCS_BLOCK(multiply)(const int_ac a_data[colA*rowA][3], int a_NNZ, const int_ac b_data[colB*rowB][3], int b_NNZ, int_ac C[rowA][colB]){		
 
 
 	for(int i = 0;i<rowA;i++){
@@ -88,14 +84,27 @@ void CCS_BLOCK(multiply)(const int_ac a_data[colA*rowA][3], int_ac a_NNZ, const 
 		}
 	}
 	
-	a_nnz:for(int i = 0;i < a_NNZ;i++){//										                                                              For every column in a
-		
-		b_nnz:for(int j = 0;j < b_NNZ;j++){//									                                                           For every row in b
+	int jRowChange = 0;
+	int jStart = 0;
+
+	for (int i = 0; i < a_NNZ; i++) {//iterate though a								
+		if(i>0){
+			if (a_data[i][COLUMN] > a_data[i - 1][COLUMN]) { //if a column changes
+
+				jStart = jRowChange;
+			}
+		}
+		for (int j = jStart; j < b_NNZ;j++) {									
 			
-			if( a_data[i][COLUMN] == b_data[j][ROW] ){//			                                               	If b.row = a.column
+			if( a_data[i][COLUMN] == b_data[j][ROW] ){//If b.row = a.column multiply values
 				
 				C[a_data[i][ROW]][b_data[j][COLUMN]] += a_data[i][VALUE] * b_data[j][VALUE];
 			}
+			else if (a_data[i][COLUMN] < b_data[j][ROW]) {//if b row  changes
+				break;
+				jRowChange = j;
+			}
+		
 			
 		}		
 		
